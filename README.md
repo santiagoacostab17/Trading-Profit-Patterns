@@ -1,3 +1,5 @@
+⚠️ Work in Progress
+
 # 📊 Binary Options Candle Pattern Analysis
 
 ## 📌 Project Overview
@@ -16,11 +18,13 @@ The pattern works as follows:
    - Candle[i] closes **above the high of Candle[i-1]**.
    - The **body of Candle[i]** is larger than each of its wicks individually.
    - Enter a **long position on Candle[i+1]** if, within the first **30 seconds**, the price surpasses `open[i]`.
+   - **Expiration** is set at the **close of Candle[i+1]**.
 
 2. **Bearish Setup**:
    - Candle[i] closes **below the low of Candle[i-1]**.
    - The **body of Candle[i]** is larger than each of its wicks individually.
    - Enter a **short position on Candle[i+1]** if, within the first **30 seconds**, the price drops below `open[i]`.
+   - **Expiration** is set at the **close of Candle[i+1]**.
 
 > This logic is implemented in **LUA** for IQ Option, and reproduced in Python for backtesting.
 
