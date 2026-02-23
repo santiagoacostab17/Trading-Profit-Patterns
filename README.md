@@ -34,9 +34,7 @@ The pattern works as follows:
 - **LUA** – Original code for IQ Option indicators  
 - **MetaTrader 5** – Extract historical market data (EUR/USD)  
 - **Python** – Backtesting simulation
-- **Tableau** - Visualization
-
-> No additional Python libraries required.
+- **IQ OPTION - Extract Scenarios images
 
 ---
 
@@ -52,13 +50,17 @@ The pattern works as follows:
 
 ---
 
-## 📊 Results Dashboard
-![Candle Pattern Dashboard](results/tableau_dashboard.png)
+## 📊 Results Visualizations
 
-This dashboard summarizes:  
+### Bullish Scenario
+![Bullish Scenario](results/bullish_scenario.png)  
+
+### Bearish Scenario
+![Bearish Scenario](results/bearish_scenario.png)  
+
+These images summarize each scenario analyzed:  
 - Pattern visualization  
 - Simulation requirements  
-- Total trades and success rate  
 
 ---
 
@@ -74,9 +76,10 @@ binary-options-candle-pattern/
 │   └── backtest.py                # Script to simulate the pattern
 │
 ├── data/
-│   └── data_binary.csv        # Original historical data (from MetaTrader 5)
+│   └── data_binary.csv            # Original historical data (from MetaTrader 5)
 │
 ├── results/
-│   └── tableau_dashboard.png      # Dashboard image summarizing results
+│   ├── bullish_scenario.png       # Dashboard for bullish scenario
+│   └── bearish_scenario.png       # Dashboard for bearish scenario
 │
 └── README.md
