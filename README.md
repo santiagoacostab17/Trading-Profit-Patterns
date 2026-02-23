@@ -1,5 +1,3 @@
-⚠️ Work in Progress
-
 # 📊 Binary Options Candle Pattern Analysis
 
 ## 📌 Project Overview
@@ -7,25 +5,33 @@ This project tests and analyzes a specific **candlestick pattern** designed for 
 
 > ⚡ **Strategy designed by me**, originally implemented in **LUA**, the scripting language used for custom indicators in IQ Option.  
 
-The goal is to **evaluate the effectiveness of the pattern** using historical market data and a **Python backtesting script**, providing insights for data-driven trading decisions.
+Historical market data for backtesting was **extracted using MetaTrader 5**. The Python backtesting script evaluates the pattern’s effectiveness, providing insights for data-driven trading decisions.
 
 ---
 
-## 🔹 Pattern Explanation
-The pattern focuses on **Bullish and Bearish Pin Bars**:  
+## 🔹 Strategy Logic
+The pattern works as follows:
 
-- **Bullish Pin Bar**: Indicates a potential upward reversal. Typically forms after a downtrend with a long lower wick and small body.  
-- **Bearish Pin Bar**: Indicates a potential downward reversal. Typically forms after an uptrend with a long upper wick and small body.  
+1. **Bullish Setup**:
+   - Candle[i] closes **above the high of Candle[i-1]**.
+   - The **body of Candle[i]** is larger than each of its wicks individually.
+   - Enter a **long position on Candle[i+1]** if, within the first **30 seconds**, the price surpasses `open[i]`.
 
-> This logic is implemented in **LUA** for IQ Option, and the Python script reproduces it for backtesting.
+2. **Bearish Setup**:
+   - Candle[i] closes **below the low of Candle[i-1]**.
+   - The **body of Candle[i]** is larger than each of its wicks individually.
+   - Enter a **short position on Candle[i+1]** if, within the first **30 seconds**, the price drops below `open[i]`.
+
+> This logic is implemented in **LUA** for IQ Option, and reproduced in Python for backtesting.
 
 ---
 
 ## 🛠️ Tools & Technologies
 - **LUA** – Original code for IQ Option indicators  
+- **MetaTrader 5** – Extract historical market data (EUR/USD)  
 - **Python** – Backtesting simulation  
 
-> No additional libraries required.
+> No additional Python libraries required.
 
 ---
 
@@ -34,14 +40,15 @@ The pattern focuses on **Bullish and Bearish Pin Bars**:
 | Metric | Value |
 |--------|-------|
 | **Pattern Tested** | Bullish/Bearish Pin Bar |
-| **Total Trades Simulated** | 500 |
-| **Win Rate** | 0–100% (to be determined) |
-| **Average Payout per Trade** | TBD |
+| **Total Trades Simulated** | 2,252 |
+| **Wins** | 1,833 |
+| **Losses** | 419 |
+| **Win Rate** | 81.39% |
 
 ---
 
 ## 📊 Results Dashboard
-![Candle Pattern Dashboard](results/dashboard_example.png)
+![Candle Pattern Dashboard](results/tableau_dashboard.png)
 
 This dashboard summarizes:  
 - Pattern visualization  
@@ -62,9 +69,10 @@ binary-options-candle-pattern/
 │   └── backtest.py                # Script to simulate the pattern
 │
 ├── data/
-│   └── raw/                       # Original historical data CSVs
+│   └── raw/
+│       └── data_binary.csv        # Original historical data (from MetaTrader 5)
 │
 ├── results/
-│   └── dashboard_example.png      # Dashboard image summarizing results
+│   └── tableau_dashboard.png      # Dashboard image summarizing results
 │
 └── README.md
