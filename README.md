@@ -1,5 +1,3 @@
-⚠️ Work in Progress
-
 # 📊 Binary Options Candle Pattern Analysis
 
 ## 📌 Project Overview
