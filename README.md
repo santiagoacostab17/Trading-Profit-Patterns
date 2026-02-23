@@ -34,7 +34,7 @@ The pattern works as follows:
 - **LUA** – Original code for IQ Option indicators  
 - **MetaTrader 5** – Extract historical market data (EUR/USD)  
 - **Python** – Backtesting simulation
-- **IQ OPTION - Extract Scenarios images
+- **IQ OPTION** - Extract Scenarios images
 
 ---
 
