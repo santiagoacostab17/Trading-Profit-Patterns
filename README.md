@@ -40,7 +40,7 @@ The pattern works as follows:
 
 | Metric | Value |
 |--------|-------|
-| **Pattern Tested** | Bullish/Bearish Pin Bar |
+| **Pattern Tested** | Pullback after Breakout |
 | **Total Trades Simulated** | 2,252 |
 | **Wins** | 1,833 |
 | **Losses** | 419 |
