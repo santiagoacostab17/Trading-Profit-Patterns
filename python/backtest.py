@@ -3,45 +3,25 @@ import pandas as pd
 print("\n===== START BACKTEST =====\n")
 
 # -----------------------------
-# 1️⃣ Read CSV (M1 data)
+# 1️⃣ Read CSVs (M1 and M2 data)
 # -----------------------------
-print("Loading M1 data...")
+print("Loading M1 and M2 data...")
 
-df = pd.read_csv("EURUSD_1m_completo.csv")
+df_1m = pd.read_csv("EURUSD_1m_clean.csv")
+df_2m = pd.read_csv("EURUSD_2m_clean.csv")
 
-df['datetime'] = pd.to_datetime(
-    df['datetime'],
-    format="%d.%m.%Y %H:%M:%S.%f"
-)
-
-df = df.sort_values('datetime').reset_index(drop=True)
+df_1m['datetime'] = pd.to_datetime(df_1m['datetime'])
+df_2m['datetime'] = pd.to_datetime(df_2m['datetime'])
 
 for col in ["open", "high", "low", "close"]:
-    df[col] = df[col].astype(float)
+    df_1m[col] = df_1m[col].astype(float)
+    df_2m[col] = df_2m[col].astype(float)
 
-print("M1 data loaded")
-print("Total M1 candles:", len(df))
-
-# -----------------------------
-# 2️⃣ Build 2-minute candles (M2)
-# -----------------------------
-print("\nBuilding M2 candles...")
-
-df['group_2m'] = df.index // 2
-
-df_2m = df.groupby('group_2m').agg({
-    'datetime': 'first',
-    'open': 'first',
-    'high': 'max',
-    'low': 'min',
-    'close': 'last'
-}).reset_index(drop=True)
-
-print("M2 candles created")
-print("Total M2 candles:", len(df_2m))
+print("M1 candles:", len(df_1m))
+print("M2 candles:", len(df_2m))
 
 # -----------------------------
-# 3️⃣ Calculate body and wicks
+# 2️⃣ Calculate candle structure for M2
 # -----------------------------
 print("\nCalculating candle structure...")
 
@@ -52,7 +32,7 @@ df_2m['body'] = (df_2m['close'] - df_2m['open']).abs()
 print("Structure calculated")
 
 # -----------------------------
-# 4️⃣ Detect pattern
+# 3️⃣ Detect bullish/bearish patterns
 # -----------------------------
 print("\nDetecting patterns...")
 
@@ -81,7 +61,7 @@ print("Total bear patterns:", bear_count)
 print("Total patterns:", bull_count + bear_count)
 
 # -----------------------------
-# 5️⃣ Simulate trades
+# 4️⃣ Simulate trades using M1 for first minute of next M2
 # -----------------------------
 print("\nSimulating trades...")
 
@@ -89,35 +69,33 @@ wins = 0
 losses = 0
 total_trades = 0
 
+# Ensure alignment: M2[i] corresponds to M1 rows (2 per M2)
 for i in range(1, len(df_2m) - 1):
 
-    entry_m1_index = (i + 1) * 2
+    # Index of the first M1 minute in the next 2M candle
+    first_m1_next_2m_index = (i + 1) * 2
 
-    if entry_m1_index >= len(df):
+    if first_m1_next_2m_index >= len(df_1m):
         continue
 
-    first_minute_next_2m = df.iloc[entry_m1_index]
+    first_minute_next_2m = df_1m.iloc[first_m1_next_2m_index]
 
     entry_price = df_2m.loc[i, 'open']
     next_2m_close = df_2m.loc[i + 1, 'close']
 
+    # Bullish trade
     if df_2m.loc[i, 'bull_pattern']:
-
         if first_minute_next_2m['low'] < entry_price:
-
             total_trades += 1
-
             if next_2m_close >= entry_price:
                 wins += 1
             else:
                 losses += 1
 
+    # Bearish trade
     elif df_2m.loc[i, 'bear_pattern']:
-
         if first_minute_next_2m['high'] > entry_price:
-
             total_trades += 1
-
             if next_2m_close <= entry_price:
                 wins += 1
             else:
@@ -126,7 +104,7 @@ for i in range(1, len(df_2m) - 1):
 print("Trade simulation completed")
 
 # -----------------------------
-# 6️⃣ Results
+# 5️⃣ Results
 # -----------------------------
 winrate = wins / total_trades if total_trades > 0 else 0
 
