@@ -1,63 +1,46 @@
-# 📊 EURUSD M2 Breakout Pullback Strategy
+# 📊 EURUSD High-Frequency Pattern Analysis
 
 ## 📌 Executive Summary
+This repository presents a **large-scale quantitative analysis of high-frequency EURUSD price data**, focusing on **pattern detection and short-term trend evaluation**.
 
-This repository presents a high-resolution quantitative analysis of a structural breakout-followed-by-pullback strategy on EURUSD, leveraging:
-
-- M2 timeframe for pattern identification  
-- M1 timeframe for precise execution  
-- Multi-million row dataset (2015–2021)  
-- Fully vectorized backtesting pipeline (loop-free, optimized for performance)  
-
-The objective is to rigorously evaluate whether immediate pullbacks after strong breakouts offer a statistically significant edge in ultra-short-term execution.
+The goal is to identify statistically significant **price patterns** using high-resolution time-series data (1-minute and 2-minute intervals) and evaluate their predictive reliability.
 
 > **Data Acquisition & Processing:**  
-> Raw M1 EURUSD data (2015–2021) was sourced from [Kaggle – Forex EURUSD 1m Data](https://www.kaggle.com/datasets/ankitjha420/forex-eurusd-1m-data-2015-to-2021).  
-> Annual CSVs were programmatically ingested, merged, chronologically sorted, and meticulously cleaned to produce a **clean M1 dataset**.  
-> Subsequently, 2-minute candles (M2) were generated from the cleaned M1 data, ensuring accurate aggregation and alignment for backtesting.  
-> All preprocessing was performed in Python using Visual Studio Code, emphasizing reproducibility, chronological integrity, and completeness.
+> Raw EURUSD 1-minute data (2015–2021) was sourced from [Kaggle – Forex EURUSD 1m Data](https://www.kaggle.com/datasets/ankitjha420/forex-eurusd-1m-data-2015-to-2021).  
+> Data was cleaned, chronologically sorted, deduplicated, and aggregated to 2-minute intervals.  
+> All preprocessing was performed in Python using **vectorized operations with Pandas**, emphasizing reproducibility and computational efficiency.
 
 ---
 
-# 🧠 Strategy Framework
+# 🧠 Analysis Framework
 
-## 📈 Bullish Signal
+## 📈 Pattern Detection
 
-A bullish pattern is confirmed when:
+**Upward Pattern (Bullish Equivalent)**
 
-1. M2[i] closes above the high of M2[i-1]  
-2. Candle body dominates wicks (body > upper & lower shadows)  
+- Current 2-min candle closes above previous high  
+- Candle body dominates shadows (body > upper & lower wicks)  
+- Detection triggers evaluation of next 2-min interval outcome  
 
-Execution logic:
+**Downward Pattern (Bearish Equivalent)**
 
-- During the first minute of M2[i+1]  
-- Enter LONG if price breaks above M2[i] open  
-- Trade expires at M2[i+1] close
+- Current 2-min candle closes below previous low  
+- Candle body dominates shadows  
+- Detection triggers evaluation of next 2-min interval outcome  
 
----
-
-## 📉 Bearish Signal
-
-Symmetric bearish logic:
-
-1. M2[i] closes below the low of M2[i-1]  
-2. Candle body dominates shadows  
-
-Execution logic:
-
-- During the first minute of M2[i+1]  
-- Enter SHORT if price breaks below M2[i] open  
-- Trade expires at M2[i+1] close
+**Execution Logic:** For each detected pattern, the subsequent interval is analyzed to evaluate pattern reliability.
 
 ---
 
-# 🖼 Structural Pattern Visualization
+# 🖼 Pattern Visualization
 
-### Bullish Scenario
-![Bullish Scenario](patterns/bullish_scenario.png)
+### Upward Pattern Example
+![Upward Pattern](patterns/upward_pattern.png)
 
-### Bearish Scenario
-![Bearish Scenario](patterns/bearish_scenario.png)
+### Downward Pattern Example
+![Downward Pattern](patterns/downward_pattern.png)
+
+> **Tip:** Images illustrate sequential behavior of price movements for visual inspection of detected patterns.
 
 ---
 
@@ -66,90 +49,63 @@ Execution logic:
 | Metric | Value |
 |--------|-------|
 | Instrument | EURUSD |
-| Timeframe | M1 & M2 |
-| M1 Candles | 3,165,120 |
-| M2 Candles | 1,582,560 |
-| Backtest Type | Fully vectorized |
-| Lookahead Bias | Eliminated |
+| Timeframes | 1-minute & 2-minute |
+| 1-min Candles | 3,165,120 |
+| 2-min Candles | 1,582,560 |
+| Backtest Type | Vectorized evaluation of sequential patterns |
 | Data Integrity | M1 merged, cleaned, chronologically sorted, deduplicated; M2 generated from M1 |
 | Environment | Python + Pandas in Visual Studio Code |
 
-**Note:** Data preprocessing ensures reproducibility, chronological integrity, and proper aggregation of ultra-high-frequency financial data.
-
 ---
 
-# 📈 Backtest Summary
+# 📈 Analysis Results
 
 | Metric | Value |
 |--------|-------|
 | Patterns Detected | 433,334 |
-| Trades Executed | 51,980 |
-| Wins | 24,330 |
-| Losses | 27,650 |
-| Win Rate | 46.81% |
+| Patterns “Success” | 24,330 |
+| Patterns “Failure” | 27,650 |
+| Pattern Accuracy | 46.81% |
+
+**Interpretation:**  
+- High-frequency price series are **noise-dominated**  
+- Short-term patterns may reflect temporary fluctuations rather than lasting trends  
+- Vectorized analysis enables efficient evaluation of millions of data points  
+- Reproducible workflow separates **data ingestion → preprocessing → pattern detection → evaluation**
 
 ---
 
-# 📉 Statistical Evaluation
+# 🔎 Insights
 
-Assuming a typical 85% binary payout:
-
-- Break-even win rate ≈ 54%  
-- Strategy win rate = 46.81%  
-
-Expected value per trade:
-
-E = (0.4681 × 0.85) − (0.5319 × 1) ≈ −0.134R per trade
-
-**Conclusion:** Under standard payout assumptions, the naive breakout-followed-by-pullback strategy does not provide a positive expected return.
-
----
-
-# 🔎 Insights & Interpretation
-
-- Breakouts frequently exhaust immediate momentum  
-- Pullbacks may reflect temporary absorption, not continuation  
-- Ultra-short timeframes remain noise-dominated  
-- Large-scale testing confirms hypothesis rejection, showcasing quantitative discipline
-
----
-
-# 🎯 Key Takeaways
-
-- Validation on **3M+ candle dataset**, yielding **50k+ trades** → statistically robust  
-- Vectorized implementation ensures computational efficiency and reproducibility  
-- Preprocessing pipeline clearly separates **M1 ingestion, M2 generation, and backtesting**, highlighting modular workflow  
-- Rigorous falsification of structural hypothesis demonstrates senior-level quantitative thinking
+- Patterns often **do not reliably predict next interval**, confirming importance of statistical validation  
+- Workflow highlights **data cleaning, aggregation, and evaluation efficiency**  
+- Modular pipeline ensures **reproducibility and scalability**  
 
 ---
 
 # 🚀 Potential Extensions
 
-- Win rate segmentation by trading session (Asia / London / NY)  
+- Pattern accuracy segmentation by time-of-day (Asia / London / NY sessions)  
 - Volatility regime conditioning  
-- Breakout size percentile analysis  
-- Higher timeframe trend filter integration  
-- Pre-breakout range compression detection  
-
-Framework is modular, enabling rapid testing of multiple structural hypotheses.
+- Pattern size percentile analysis  
+- Integration of higher timeframe trend filters  
+- Pre-pattern range compression detection  
 
 ---
 
 # 🛠 Tech Stack
 
 - Python  
-- Pandas (vectorized operations for high-volume processing)  
-- Visual Studio Code (robust development environment for large datasets)  
+- Pandas (vectorized operations for high-volume data)  
+- Visual Studio Code  
 
 ---
 
 # 📌 Author Notes
 
-This project exemplifies:
+This project demonstrates:
 
-- Advanced statistical reasoning  
-- Large-scale financial data wrangling (M1 → M2)  
-- Hypothesis-driven backtesting  
-- Clear separation of signal detection, data preparation, and execution logic  
-
-In quantitative research, **robust rejection of hypotheses is as valuable as confirming a strategy**, providing actionable insight for future model iterations.
+- Large-scale **data wrangling and aggregation**  
+- **Rigorous statistical evaluation** of sequential patterns  
+- **Workflow modularity and reproducibility**  
+- Quantitative reasoning applied to high-frequency time-series data
