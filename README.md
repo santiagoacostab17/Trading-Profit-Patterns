@@ -54,10 +54,10 @@ Execution logic:
 # 🖼 Structural Pattern Visualization
 
 ### Bullish Scenario
-![Bullish Scenario](results/bullish_scenario.png)
+![Bullish Scenario](patterns/bullish_scenario.png)
 
 ### Bearish Scenario
-![Bearish Scenario](results/bearish_scenario.png)
+![Bearish Scenario](patterns/bearish_scenario.png)
 
 ---
 
